@@ -15,6 +15,9 @@
           Ecommerce Sisloc
         </q-toolbar-title>
 
+        <q-btn stretch flat to="/login" v-if="!isAuthenticated">Login</q-btn>
+        <q-btn stretch flat @click="logout" v-else>Logout</q-btn>
+
       </q-toolbar>
     </q-header>
 
@@ -47,6 +50,7 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink.vue'
+import {mapGetters} from 'vuex'
 
 const linksData = [
   {
@@ -60,6 +64,12 @@ const linksData = [
     caption: 'veja os itens do carrinho',
     icon: 'shopping_cart',
     link: '/carrinho_compras'
+  },
+  {
+    title: 'Login',
+    caption: 'Autentique na página',
+    icon: 'login',
+    link: '/login'
   }
 ]
 
@@ -71,8 +81,18 @@ export default {
   data () {
     return {
       leftDrawerOpen: false,
-      essentialLinks: linksData
+      essentialLinks: linksData,
+
     }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/signOut');
+      this.$router.push('/')
+    }
+  },
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated'])
   }
 }
 </script>

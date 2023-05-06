@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="constrain q-pa-md">
 
   <div class="row">
     <div class="offset-4">
@@ -17,12 +17,12 @@
     </div>
   </div>
     
-    <div class="flex flex-center q-pa-md row items-start q-gutter-md">
+    <div class="row items-start q-gutter-md">
     
       <q-card 
         v-for="produto in produtos"
         :key="produto.id"
-        class="my-card"
+        class="card-item"
       >
         <q-img :src="produto.imagem" />
 
