@@ -8,13 +8,13 @@ app.use(cors())
 app.use(express.json())
 
 
-// endpoint
+// endpoint teste
 app.get('/', (request, response) => {
-    response.send('Ola mundo');
     console.log('endpoint funcionando');
 });
 
 
+// endpoint login com jwt
 const jsonwebtoken = require("jsonwebtoken");
 const {user, PRIVATE_KEY, tokenValidated} = require("./auth.js");
 app.post('/login', (req, res) => {
@@ -45,7 +45,7 @@ app.post('/login', (req, res) => {
 // endpoint - produtos
 app.get('/produtos', async (request, response) => {
 
-    var retorno = '2';
+    var pesquisa = request.query.pesquisa || '';
 
     const sql = require("mssql/msnodesqlv8");
     const config  = {
@@ -59,9 +59,7 @@ app.get('/produtos', async (request, response) => {
 
     await sql.connect(config);
     try{
-
-    
-        const result = await sql.query(`select * from usuariosx`);
+        const result = await sql.query(`select * from produtos where prod_nome LIKE '%${pesquisa}%' order by prod_id`);
         if(result) {
             retorno = result.recordset;
         }
