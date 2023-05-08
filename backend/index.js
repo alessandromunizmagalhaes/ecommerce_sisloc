@@ -71,6 +71,35 @@ app.get('/produtos', async (request, response) => {
     }
 });
 
+
+// endpoint - produto/:prod_id
+app.get('/produtos', async (request, response) => {
+
+    var prod_id = request.query.prod_id || '';
+
+    const sql = require("mssql/msnodesqlv8");
+    const config  = {
+        database: "ecommerce_sisloc",
+        server: "localhost",
+        options: {
+            trustedConnection: true
+        }
+    };
+
+    await sql.connect(config);
+    try{
+        const result = await sql.query(`select * from produtos where prod_id = '${prod_id}'`);
+        if(result) {
+            retorno = result.recordset;
+        }
+
+        response.send(retorno);
+    } catch(e) {
+        console.log(e);
+        response.send('Erro interno na requisição SQL');
+    }
+});
+
 // escutando
 app.listen(3000, () => {
   console.log(`Escutando na porta 3000`)

@@ -62,7 +62,10 @@ export default {
           this.$router.push(toPath);
         } catch(error) {
           if(error.response.data){
-            alert(error.response.data);
+            this.$q.notify({
+              message: error.response.data,
+              color: 'red'
+            });
           }
         }
       }

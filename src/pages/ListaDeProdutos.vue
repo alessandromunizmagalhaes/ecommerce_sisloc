@@ -6,13 +6,15 @@
       <div class="q-pa-md">
         <div class="q-gutter-y-md column">
 
-          <q-input outlined label="Pesquisar" stack-label v-model="pesquisa">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-          <q-btn class="col-2" @click="getProdutos">Pesquisar</q-btn>
-
+          <div class="row">  
+            <q-input 
+            label="Pesquisar" 
+            class="col-8"
+            v-on:keyup.enter="onEnter"
+            stack-label 
+            v-model="pesquisa">
+            </q-input>
+          </div>
         </div>
       </div>
     </div>
@@ -31,8 +33,9 @@
           <q-btn
             fab
             color="primary"
-            icon="shopping_cart"
+            icon="add"
             class="absolute"
+            :to="'/detalhe_produto/' + produto.prod_id"
             style="top: 0; right: 12px; transform: translateY(-50%);"
           />
 
@@ -56,11 +59,13 @@
 
         <q-card-actions>
           <q-btn flat round icon="list" />
-          <q-btn flat color="primary">
-            Mais detalhes
+          <q-btn flat color="primary" :to="'/detalhe_produto/' + produto.prod_id">
+            Ver ficha técnica
           </q-btn>
         </q-card-actions>
       </q-card>
+
+      <p class="text-weight-thin text-justify" v-if="!tem_resultados">Nenhum produto encontrado</p>
 
     </div>
 
@@ -75,7 +80,7 @@ export default {
     return {
         produtos : [],
         pesquisa : '',
-        tem_resultados : false
+        tem_resultados : true
     }
   },
   created() {
@@ -94,6 +99,9 @@ export default {
     },
     getPic(img_name) {
       return './' + img_name;
+    },
+    onEnter: function() {
+       this.getProdutos();
     }
   }
 }
