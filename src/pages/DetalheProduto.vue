@@ -1,12 +1,30 @@
 <template>
   <q-page class="flex flex-center">
-    <h5>Detalhe do Produto</h5>
+
+    <div class="q-pa-md row items-start q-gutter-md">
+      <q-card class="my-card" flat bordered>
+        <q-card-section horizontal>
+          <q-img
+            class="col-5"
+            :src="'./' + this.prod_imagem"
+          />
+
+          <q-card-section>
+            {{ this.prod_nome }}
+          </q-card-section>
+          
+        </q-card-section>
+      </q-card>
+
+    </div>
+
   </q-page>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  name: 'Detalhe do Produto',
+  name: 'DetalheProduto',
   data(){
     return {
       prod_id : '',
@@ -17,14 +35,18 @@ export default {
     }
   },
   created() {
-    const produto = this.$route.params.produto;
+    this.prod_id = this.$route.params.produto;
+    this.getProduto();
   },
-  methods() {
-    getProduto = function() {
-      axios.get('http://localhost:3000/produto?prod_id=' + this.pesquisa)
+  methods : {
+    getProduto() {
+      axios.get('http://localhost:3000/produto?prod_id=' + this.prod_id)
         .then(response => {
-          this.produtos = response.data;
-          this.tem_resultados = response.data.length > 0
+          let produto = response.data.length > 0 ? response.data[0] : {};
+          this.prod_nome = produto.prod_nome;
+          this.prod_descricao = produto.prod_descricao;
+          this.prod_valor = produto.prod_valor;
+          this.prod_imagem = produto.prod_imagem;
         })
         .catch(error => {
           console.log(error)
@@ -33,3 +55,9 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 500px
+</style>

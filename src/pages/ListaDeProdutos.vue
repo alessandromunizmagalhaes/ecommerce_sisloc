@@ -27,7 +27,7 @@
         :key="produto.prod_id"
         class="card-item"
       >
-        <q-img class="responsive" :src="getPic(produto.prod_imagem)" />
+        <q-img class="responsive" :src="'./' + produto.prod_imagem" />
 
         <q-card-section>
           <q-btn
@@ -96,9 +96,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-    },
-    getPic(img_name) {
-      return './' + img_name;
     },
     onEnter: function() {
        this.getProdutos();
