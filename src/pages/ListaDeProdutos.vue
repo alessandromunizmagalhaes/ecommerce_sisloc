@@ -47,9 +47,6 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <div class="text-subtitle1">
-            R$ {{ produto.prod_valor }}
-          </div>
           <div class="text-caption text-grey">
             {{ produto.prod_descricao }}
           </div>
