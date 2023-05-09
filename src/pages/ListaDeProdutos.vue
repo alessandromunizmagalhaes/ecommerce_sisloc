@@ -19,7 +19,14 @@
       </div>
     </div>
   </div>
-    
+  
+  <q-page class="flex flex-center" v-if="!tem_resultados">
+    <div class="q-pa-md">
+      <p class="text-weight-thin text-justify">Nenhum produto encontrado</p>
+    </div>
+  </q-page>
+  
+
     <div class="row items-start q-gutter-md">
     
       <q-card 
@@ -61,8 +68,6 @@
           </q-btn>
         </q-card-actions>
       </q-card>
-
-      <p class="text-weight-thin text-justify" v-if="!tem_resultados">Nenhum produto encontrado</p>
 
     </div>
 

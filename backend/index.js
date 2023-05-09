@@ -1,6 +1,7 @@
 // dependencias
 const express = require('express')
 const cors = require('cors')
+const md5 = require('md5');
 
 // configuracao express
 const app = express();
@@ -33,7 +34,7 @@ app.post('/login', (req, res) => {
     const password = req.body ? req.body.senha : '';
 
     try{
-        const correctPassword = email === 'fredx@sisloc.com.br' && password === '123Fred';
+        const correctPassword = email === 'fredx@sisloc.com.br' && password === md5('123Fred');
         console.log(req.body);
         
         if(!correctPassword) return res.status(401).send('E-mail ou senha inválidos');

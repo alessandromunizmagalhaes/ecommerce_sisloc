@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h4 >Carrinho de Compras</h4>
     <q-page class="flex flex-center">
       <div class="q-pa-md">
-        <q-list bordered class="rounded-borders" padding separator style="max-width: 600px">
+
+        <p class="text-weight-thin text-justify" v-if="!tem_resultados">O carrinho está vazio</p>
+
+        <q-list bordered class="rounded-borders" padding separator style="max-width: 600px" v-else>
           <q-item
             v-for="item in this.carrinho"
-            :key="item.prod_id"
+            :key="item.prod_id + '_' + item.prod_valor_selecionado"
           >
 
             <q-item-section top thumbnail class="q-ml-none">
@@ -34,7 +36,7 @@
           <q-item>
             <q-item-section top side>
               <div class="text-weight-bold q-gutter-md">
-                <q-item-label caption class="text-italic">Valor Total: </q-item-label>
+                <q-item-label caption class="text-italic">Valor Total: {{ getValorTotal }}</q-item-label>
               </div>
             </q-item-section>
           </q-item>
@@ -52,8 +54,21 @@
 import {mapGetters, mapActions} from 'vuex'
 export default {
   name: 'CarrinhoCompras',
+  data(){
+    return {
+      tem_resultados : true
+    }
+  },
   computed: {
     ...mapGetters('carrinho_compras', ['carrinho']),
+    getValorTotal() {
+      let total = 0;
+      for(var item in this.carrinho) {
+        let prod = this.carrinho[item];
+        total += prod['prod_valor_' + prod.prod_valor_selecionado] * prod['prod_qtd']
+      }
+      return total;
+    }
   },
   methods : {
     ...mapActions('carrinho_compras', ['updateCarrinho', 'mudarQuantidadeItens', 'removerItem']),
@@ -70,19 +85,26 @@ export default {
       }
     },
     removerItemDoCarrinhoItem(param) {
-      let callback = this.removerItem;
+      let callback = this.removerItem
+        , items = this.carrinho;
       this.$q.dialog({
         title: 'Exclusão',
         message: "Remover o item '" + param.prod_nome + "' do carrinho de compras?",
-        cancel: true,
+        cancel: false,
         persistent: false
       }).onOk(() => {
         callback(param);
+
+        if(Object.keys(items).length === 0) {
+          this.tem_resultados = false;
+        }
       });
     }
   },
-  created() {
-    console.log(this.carrinho);
+  mounted() {
+    if(Object.keys(this.carrinho).length === 0) {
+          this.tem_resultados = false;
+        }
   }
 }
 </script>
