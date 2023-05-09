@@ -40,7 +40,7 @@
           <q-btn
             fab
             color="primary"
-            icon="add"
+            icon="shopping_cart"
             class="absolute"
             :to="'/detalhe_produto/' + produto.prod_id"
             style="top: 0; right: 12px; transform: translateY(-50%);"

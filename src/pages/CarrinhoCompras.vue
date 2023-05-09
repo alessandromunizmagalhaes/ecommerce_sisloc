@@ -17,7 +17,7 @@
 
             <q-item-section>
               <q-item-label class="text-subtitle2">{{item.prod_nome}} <q-space /></q-item-label>
-              <q-item-label caption>R${{ item['prod_valor_' + item.prod_valor_selecionado] }} <span class="text-weight-bold">x {{ item['prod_qtd'] }} = <span class="text-positive">R${{ item['prod_valor_' + item.prod_valor_selecionado] * item['prod_qtd']  }} </span> </span> </q-item-label>
+              <q-item-label caption>R${{ item['prod_valor_' + item.prod_valor_selecionado] }} <span class="text-weight-bold">x {{ item['prod_qtd'] }} = <span class="text-positive">R${{ (item['prod_valor_' + item.prod_valor_selecionado] * item['prod_qtd']).toFixed(2)  }} </span> </span> </q-item-label>
             </q-item-section>
 
             <q-item-section top side>
@@ -36,7 +36,7 @@
           <q-item>
             <q-item-section top side>
               <div class="text-weight-bold q-gutter-md">
-                <q-item-label caption class="text-italic">Valor Total: {{ getValorTotal }}</q-item-label>
+                <q-item-label caption class="text-italic"><span class="text-subtitle1 text-weight-medium">Valor Total: <span class="text-positive">R${{ getValorTotal }}</span></span></q-item-label>
               </div>
             </q-item-section>
           </q-item>
@@ -67,7 +67,7 @@ export default {
         let prod = this.carrinho[item];
         total += prod['prod_valor_' + prod.prod_valor_selecionado] * prod['prod_qtd']
       }
-      return total;
+      return total.toFixed(2);
     }
   },
   methods : {
