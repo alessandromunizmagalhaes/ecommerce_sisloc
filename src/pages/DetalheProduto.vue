@@ -7,12 +7,12 @@
 
       <q-card class="my-card">
       <q-card-section horizontal>
-        <q-img class="col-5" :src="'./' + this.prod_imagem"/>
+        <q-img class="col-5" :src="'./' + this.db.prod_imagem"/>
 
         <q-card-section>
-          <div class="text-h6">{{this.prod_nome}}</div>
-          <div class="text-caption text-grey">{{this.prod_descricao}}</div> 
-          <div class="text-subtitle1">R$ {{ valorProduto }} <spam class="text-caption text-grey">({{this.prod_valor_selecionado}})</spam> </div>
+          <div class="text-h6">{{this.db.prod_nome}}</div>
+          <div class="text-caption text-grey">{{this.db.prod_descricao}}</div> 
+          <div class="text-subtitle1">R$ {{ valorProduto }} <span class="text-caption text-grey">({{this.prod_valor_selecionado}})</span> </div>
           <q-btn-dropdown color="primary" label="Ver preços">
             <q-list>
               <q-item clickable v-close-popup @click="onItemClick('diario')">
@@ -47,7 +47,7 @@
       <q-separator />
 
       <q-card-actions>
-        <q-btn flat color="primary" label="Adicionar ao carrinho" />
+        <q-btn flat color="primary" label="Adicionar ao carrinho" icon="shopping_cart" @click="AdicionarAoCarrinho" />
 
         <q-space />
 
@@ -65,7 +65,7 @@
         <div v-show="expanded">
           <q-separator />
           <q-card-section class="text-subitle2">
-            {{ this.prod_info_tecnica }}
+            {{ this.db.prod_info_tecnica }}
           </q-card-section>
         </div>
       </q-slide-transition>
@@ -77,22 +77,26 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import {mapGetters, mapActions} from 'vuex'
+
 export default {
   name: 'DetalheProduto',
   data(){
     return {
       expanded: true,
       prod_id : '',
-      prod_nome: '',
-      prod_descricao: '',
-      prod_info_tecnica: '',
-      prod_valor_diario : '',
-      prod_valor_semanal : '',
-      prod_valor_quinzenal : '',
-      prod_valor_mensal : '',
       prod_valor_selecionado : 'mensal',
-      prod_imagem: '',
+      db: {
+        prod_nome: '',
+        prod_descricao: '',
+        prod_info_tecnica: '',
+        prod_valor_diario : '',
+        prod_valor_semanal : '',
+        prod_valor_quinzenal : '',
+        prod_valor_mensal : '',
+        prod_imagem: '',
+      },
     }
   },
   created() {
@@ -100,18 +104,12 @@ export default {
     this.getProduto();
   },
   methods : {
+    ...mapActions('carrinho_compras', ['adicionarItem']),
     getProduto() {
       axios.get('http://localhost:3000/produto?prod_id=' + this.prod_id)
         .then(response => {
-          let produto = response.data.length > 0 ? response.data[0] : {};
-          this.prod_nome = produto.prod_nome;
-          this.prod_descricao = produto.prod_descricao;
-          this.prod_info_tecnica = produto.prod_info_tecnica;
-          this.prod_valor_diario = produto.prod_valor_diario;
-          this.prod_valor_semanal = produto.prod_valor_semanal;
-          this.prod_valor_quinzenal = produto.prod_valor_quinzenal;
-          this.prod_valor_mensal = produto.prod_valor_mensal;
-          this.prod_imagem = produto.prod_imagem;
+          let produto_db = response.data.length > 0 ? response.data[0] : {};
+          Object.assign(this.db, produto_db);
         })
         .catch(error => {
           console.log(error)
@@ -119,11 +117,18 @@ export default {
     },
     onItemClick(tipo_preco) {
         this.prod_valor_selecionado = tipo_preco;
-    }
+    },
+    AdicionarAoCarrinho() {
+      this.adicionarItem(Object.assign({
+        prod_id: this.prod_id,
+        prod_valor_selecionado: this.prod_valor_selecionado
+      }, this.db));
+      this.$router.push('/carrinho_compras');
+    },
   },
   computed: {
     valorProduto() {
-      return this['prod_valor_' + this.prod_valor_selecionado];
+      return this.db['prod_valor_' + this.prod_valor_selecionado];
     }
   }
 }

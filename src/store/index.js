@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import auth from './auth'
+import carrinho_compras from './store-carrinho-compras'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      auth
+      auth, carrinho_compras
     },
 
     // enable strict mode (adds overhead!)
