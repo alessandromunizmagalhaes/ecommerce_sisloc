@@ -12,7 +12,7 @@
           >
 
             <q-item-section top thumbnail class="q-ml-none">
-              <img :src="'./' + item.prod_imagem">
+              <img class="img-carrinho" :src="'./' + item.prod_imagem">
             </q-item-section>
 
             <q-item-section>
@@ -108,3 +108,9 @@ export default {
   }
 }
 </script>
+<style>
+.img-carrinho {
+  width: 200px !important;
+  height: 112px !important;
+}
+</style>
